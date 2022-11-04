@@ -1,0 +1,7 @@
+<h1> you ar login with {{flag.first_name}} </h1>
+<h2>please insert the pass </h2>
+<form action="/checkpass"  method="post">
+    {% csrf_token %}
+<input name="pass"  type="password">
+<button  type="submit"> ثبت</button>
+</form>
