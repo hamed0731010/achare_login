@@ -21,7 +21,7 @@ def signup(request):
         return redirect("/login")
      else:
         return redirect("/signup")   
-     return redirect("/signup")        
+     return render(request,"login/signup.html")        
 def checkcode(request):
         codes=[110,120,130,140,150,160,170,180]
         code1=request.POST.get("code","")   
@@ -35,12 +35,13 @@ def checknumber(request):
        
         number1=request.POST.get("number","")
         flag=User.objects.filter(number=number1).first()
+        
         if flag is None:
-                
+                request.session['number']=number1
                 print("no user")
                 return render(request,"login/code.html")
         elif flag is not None :
-                request.session['number']=flag.number
+                request.session['number']=str(flag.number)
                 context={
                       "flag":flag  
                   }
@@ -85,10 +86,10 @@ def checkpass(request):
                         return render(request,"login/loginpass.html") 
                 elif flag is not None:      
                         return HttpResponse(f"you are login with {flag.first_name } ")
-                elif ip_address in block_li:
-                        return HttpResponse(f"{ip_address} you are blocked for 1 hours")
+          elif ip_address in block_li:
+                 return HttpResponse(f"{ip_address} you are blocked for 1 hours")
 
-                return redirect( "/checkpass" ) 
+          return redirect( "/checkpass" ) 
 class UserList(ListAPIView):
         queryset=User.objects.all()
         serializer_class=UserSerializer
