@@ -5,11 +5,11 @@ from .models import User
 from django.shortcuts import redirect ,HttpResponse
 from .serializer import UserSerializer
 import socket
+import datetime
 
 
 
-
-
+blocked_ip={}
 block_li=[]
 def signup(request):
      firstname=request.POST.get("first_name","")
@@ -37,7 +37,7 @@ def checknumber(request):
         flag=User.objects.filter(number=number1).first()
         
         if flag is None:
-                request.session['number']=number1
+                request.session['number']=str(number1)
                 print("no user")
                 return render(request,"login/code.html")
         elif flag is not None :
@@ -56,7 +56,7 @@ def checkpass(request):
           
           hostname=socket.gethostname()
           ip_address=socket.gethostbyname(hostname)
-          if ip_address not in block_li:
+          if (ip_address not in blocked_ip.keys()) or (blocked_ip[ip_address]+ datetime.timedelta(minutes=60)<datetime.datetime.now()):
                 try:
                         request.session['counter']      
                 except:
@@ -66,11 +66,13 @@ def checkpass(request):
                 
                                 
                 try:
-                        request.session['username']   
+                        request.session['user']   
                 except:
-                        request.session['username']=request.session['number'] 
-                else:
-                        if  request.session['username']!= request.session['number'] :      
+                        request.session['user']=request.session['number'] 
+                else:   
+                        a=request.session['user']
+                        b=request.session['number']
+                        if  a != b :      
                                 counter=0
                 
                         
@@ -79,8 +81,9 @@ def checkpass(request):
                         counter=counter+1
                         request.session['counter']=counter
                         if counter >2:
-                                block_li.append(ip_address)
-                                
+                                #block_li.append(ip_address)
+                                t=datetime.datetime.now()
+                                blocked_ip[ip_address]=t
                                 return HttpResponse(f"{ip_address} you are blocked for 1 hours")
                         
                         return render(request,"login/loginpass.html") 
