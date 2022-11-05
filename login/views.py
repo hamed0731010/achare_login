@@ -10,8 +10,9 @@ import datetime
 
 
 blocked_ip={}
-block_li=[]
-def signup(request):
+#for sign up
+def signup(
+        request):
      firstname=request.POST.get("first_name","")
      lastname=request.POST.get("last_name","")
      password=request.POST.get("pass","")
@@ -22,7 +23,9 @@ def signup(request):
      else:
         return redirect("/signup")   
      return render(request,"login/signup.html")        
-def checkcode(request):
+#for checking the authontication code     
+def checkcode(
+           request):
         codes=[110,120,130,140,150,160,170,180]
         code1=request.POST.get("code","")   
         if int(code1)  in codes:
@@ -30,8 +33,9 @@ def checkcode(request):
         else :
                 return render(request,"login/code.html")          
         return redirect("/checkcode" )  
-# Create your views here.
-def checknumber(request):
+# for checking the phone number
+def checknumber(
+             request):
        
         number1=request.POST.get("number","")
         flag=User.objects.filter(number=number1).first()
@@ -46,10 +50,14 @@ def checknumber(request):
                       "flag":flag  
                   }
                 return render( request, "login/loginpass.html"   , context )
-def number(request):
+#first login form base phone number                
+def number(
+           request):
       
         return render(request,"login/login.html")
-def checkpass(request):
+#for checking the pass        
+def checkpass(
+             request):
           
           pass1=request.POST.get("pass","")
           flag=User.objects.filter(password=pass1).first()
