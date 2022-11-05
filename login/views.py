@@ -1,3 +1,4 @@
+from random import random
 from django.shortcuts import render
 from rest_framework.generics import ListAPIView,ListCreateAPIView,CreateAPIView
 from rest_framework.views import APIView
@@ -6,9 +7,10 @@ from django.shortcuts import redirect ,HttpResponse
 from .serializer import UserSerializer
 import socket
 import datetime
+from django.contrib import messages
+import random
 
-
-
+#password hash shode nist ,dade ha validate nashodan , modiriate khata  ,ekhtarha and meeages
 blocked_ip={}
 #for sign up
 def signup(
@@ -21,14 +23,15 @@ def signup(
         User.objects.create(first_name=firstname,last_name=lastname,password=password,number=request.session['number'])
         return redirect("/login")
      else:
-        return redirect("/signup")   
+        return render(request,"login/signup.html")   
      return render(request,"login/signup.html")        
 #for checking the authontication code     
 def checkcode(
            request):
-        codes=[110,120,130,140,150,160,170,180]
+        code=int(random.randrange(100000,999999))   
+        messages.info(request,f"your code is {code}")
         code1=request.POST.get("code","")   
-        if int(code1)  in codes:
+        if int(code1) == code:
              return render(request,"login/signup.html")
         else :
                 return render(request,"login/code.html")          

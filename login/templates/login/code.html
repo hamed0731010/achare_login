@@ -1,6 +1,6 @@
 <form  action="/checkcode" method="post" >
     {% csrf_token %}
-    <input name="code">
+    <input name="code" required>
 
 <button  type="submit"> ثبت</button>
 
