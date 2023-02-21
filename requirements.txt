@@ -1,4 +1,3 @@
-django-phonenumber-field
-django-phonenumbers
 djangorestframework
 django
+ippanel
